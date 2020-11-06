@@ -268,5 +268,65 @@ namespace EmployeePayrollProblem
                 }
             }
         }
+
+
+        public static void GetSalaryStatsGenderWise()
+        {
+            SqlConnection sqlConnection = DBConnection.GetConnection();
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    string query = @"SELECT gender,SUM(basic_pay) AS 'salary_sum',AVG(basic_pay) AS 'salary_avg',MIN(basic_pay) AS 'salary_min',MAX(basic_pay) AS 'salary_max',COUNT(basic_pay) AS 'person_count' FROM employee_payroll GROUP BY gender;";
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                    if (dataReader.HasRows == false)
+                    {
+                        return;
+                    }
+                    else
+                    {
+                        Console.WriteLine();
+                        Console.Write("{0,-15}", "gender");
+                        Console.Write("{0,-15}", "salarySum");
+                        Console.Write("{0,-15}", "salaryAvg");
+                        Console.Write("{0,-15}", "salaryMin");
+                        Console.Write("{0,-15}", "salaryMax");
+                        Console.Write("{0,-15}", "personCount");
+                        Console.WriteLine();
+                        while (dataReader.Read())
+                        {
+                            string gender = dataReader["gender"].ToString();
+                            double salarySum = Convert.ToDouble(dataReader["salary_sum"].ToString());
+                            double salaryAvg = Convert.ToDouble(dataReader["salary_avg"].ToString());
+                            double salaryMin = Convert.ToDouble(dataReader["salary_min"].ToString());
+                            double salaryMax = Convert.ToDouble(dataReader["salary_max"].ToString());
+                            int personCount = Convert.ToInt32(dataReader["person_count"].ToString());
+
+                            Console.Write("{0,-15}", gender);
+                            Console.Write("{0,-15}", Math.Round(salarySum, 2));
+                            Console.Write("{0,-15}", Math.Round(salaryAvg, 2));
+                            Console.Write("{0,-15}", Math.Round(salaryMin, 2));
+                            Console.Write("{0,-15}", Math.Round(salaryMax, 2));
+                            Console.Write("{0,-15}", personCount);
+                            Console.WriteLine();
+                        }
+                        dataReader.Close();
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+        }
     }
 }

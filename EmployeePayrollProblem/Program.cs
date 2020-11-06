@@ -16,6 +16,7 @@ namespace EmployeePayrollProblem
         static void Main(string[] args)
         {
             EmployeeDBOperations.DisplayEmployeeDetails(EmployeeDBOperations.GetEmployeeDetailsWithinStartDates("2016-01-01","2017-01-01"));
+            EmployeeDBOperations.GetSalaryStatsGenderWise();
         }
     }
 }

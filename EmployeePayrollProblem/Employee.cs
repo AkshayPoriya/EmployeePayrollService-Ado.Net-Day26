@@ -1,9 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
+﻿// --------------------------------------------------------------------------------------------------------------------
+// <copyright file="Employee.cs" company="Bridgelabz">
+//   Copyright © 2018 Company
+// </copyright>
+// <creator Name="Akshay Poriya"/>
+// --------------------------------------------------------------------------------------------------------------------
 namespace EmployeePayrollProblem
 {
+    using System;
+    using System.Collections.Generic;
+    using System.Text;
+
+    /// <summary>
+    /// Employee Details
+    /// </summary>
     class Employee
     {
         public int EmployeeID { get; set; }

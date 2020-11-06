@@ -17,6 +17,10 @@ namespace EmployeePayrollProblem
     /// </summary>
     public class EmployeeDBOperations
     {
+        /// <summary>
+        /// UC2
+        /// </summary>
+        /// <returns></returns>
         public static List<Employee> GetAllEmployeeDetails()
         {
             SqlConnection sqlConnection = DBConnection.GetConnection();
@@ -84,7 +88,11 @@ namespace EmployeePayrollProblem
             }
         }
 
-        public static void DisplayEmployeeDetails()
+        /// <summary>
+        /// UC2
+        /// </summary>
+        /// <param name="employeeList"></param>
+        public static void DisplayEmployeeDetails(List<Employee> employeeList)
         {
             Console.WriteLine("Employee Details:");
             Console.Write("{0,-5}", "id");
@@ -100,7 +108,7 @@ namespace EmployeePayrollProblem
             Console.Write("{0,-15}", "income_tax");
             Console.Write("{0,-15}", "net_pay");
             Console.WriteLine();
-            List<Employee> employeeList = GetAllEmployeeDetails();
+            //List<Employee> employeeList = GetAllEmployeeDetails();
             foreach (Employee employee in employeeList)
             {
                 Console.Write("{0,-5}", employee.EmployeeID);
@@ -120,6 +128,7 @@ namespace EmployeePayrollProblem
         }
 
         /// <summary>
+        /// UC3 and UC4
         /// This function is equivalent to prepared statement in C#
         /// </summary>
         /// <param name="name"></param>
@@ -152,6 +161,11 @@ namespace EmployeePayrollProblem
             }
         }
 
+        /// <summary>
+        /// UC3
+        /// </summary>
+        /// <param name="name"></param>
+        /// <returns></returns>
         public static double GetSalary(string name)
         {
             SqlConnection sqlConnection = DBConnection.GetConnection();
@@ -165,6 +179,81 @@ namespace EmployeePayrollProblem
                     sqlCommand.Parameters.AddWithValue("@name", name);
                     double basicPay = (double)sqlCommand.ExecuteScalar();
                     return basicPay;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+        }
+
+        /// <summary>
+        /// UC5
+        /// </summary>
+        /// <returns></returns>
+        public static List<Employee> GetEmployeeDetailsWithinStartDates(string startDate, string endDate)
+        {
+            SqlConnection sqlConnection = DBConnection.GetConnection();
+            List<Employee> employeeList = new List<Employee>();
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    string query = @"SELECT * FROM dbo.employee_payroll WHERE start BETWEEN CAST(@startDate AS DATE) AND CAST(@endDate AS DATE) ";
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    DateTime start_date = Convert.ToDateTime(startDate);
+                    DateTime end_date = Convert.ToDateTime(endDate);
+                    sqlCommand.Parameters.AddWithValue("@startDate", start_date);
+                    sqlCommand.Parameters.AddWithValue("@endDate", end_date);
+                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
+                    if (dataReader.HasRows == false)
+                    {
+                        return employeeList;
+                    }
+                    else
+                    {
+                        while (dataReader.Read())
+                        {
+                            int id = Convert.ToInt32(dataReader["id"].ToString());
+                            string name = dataReader["name"].ToString();
+                            DateTime start = Convert.ToDateTime(dataReader["start"].ToString());
+                            string gender = dataReader["gender"].ToString();
+                            string phoneNumber = dataReader["phone_number"].ToString();
+                            string address = dataReader["address"].ToString();
+                            string department = dataReader["department"].ToString();
+                            double basicPay = Convert.ToDouble(dataReader["basic_pay"].ToString());
+                            double deductions = Convert.ToDouble(dataReader["deductions"].ToString());
+                            double taxablePay = Convert.ToDouble(dataReader["taxable_pay"].ToString());
+                            double incomeTax = Convert.ToDouble(dataReader["income_tax"].ToString());
+                            double netPay = Convert.ToDouble(dataReader["net_pay"].ToString());
+
+                            Employee employee = new Employee();
+                            employee.EmployeeID = id;
+                            employee.EmployeeName = name;
+                            employee.StartDate = start;
+                            employee.Gender = gender;
+                            employee.PhoneNumber = phoneNumber;
+                            employee.Address = address;
+                            employee.Department = department;
+                            employee.BasicPay = basicPay;
+                            employee.Deductions = deductions;
+                            employee.TaxablePay = taxablePay;
+                            employee.IncomeTax = incomeTax;
+                            employee.NetPay = netPay;
+
+                            employeeList.Add(employee);
+                        }
+                        dataReader.Close();
+                        return employeeList;
+                    }
                 }
             }
             catch (Exception ex)

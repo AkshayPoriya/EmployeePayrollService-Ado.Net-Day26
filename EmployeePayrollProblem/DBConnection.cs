@@ -12,7 +12,7 @@ namespace EmployeePayrollProblem
     /// <summary>
     /// Returns DataBase Connection
     /// </summary>
-    class DBConnection
+    public class DBConnection
     {
         /// <summary>
         /// Gets the connection.

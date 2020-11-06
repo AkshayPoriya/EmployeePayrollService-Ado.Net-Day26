@@ -15,7 +15,7 @@ namespace EmployeePayrollProblem
     /// <summary>
     /// 
     /// </summary>
-    class EmployeeDBOperations
+    public class EmployeeDBOperations
     {
         public static List<Employee> GetAllEmployeeDetails()
         {
@@ -27,8 +27,8 @@ namespace EmployeePayrollProblem
                 {
                     sqlConnection.Open();
                     string query = @"select * from dbo.employee_payroll";
-                    SqlCommand cmd = new SqlCommand(query, sqlConnection);
-                    SqlDataReader dataReader = cmd.ExecuteReader();
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    SqlDataReader dataReader = sqlCommand.ExecuteReader();
                     if (dataReader.HasRows == false)
                     {
                         return employeeList;
@@ -116,6 +116,62 @@ namespace EmployeePayrollProblem
                 Console.Write("{0,-15}", employee.IncomeTax);
                 Console.Write("{0,-15}", employee.NetPay);
                 Console.WriteLine();
+            }
+        }
+
+        public static void UpdateSalary(string name, double basicPay)
+        {
+            SqlConnection sqlConnection = DBConnection.GetConnection();
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    string query = @"update dbo.employee_payroll set basic_pay=@pay where name=@name";
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("@pay", basicPay);
+                    sqlCommand.Parameters.AddWithValue("@name", name);
+                    sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+        }
+
+        public static double GetSalary(string name)
+        {
+            SqlConnection sqlConnection = DBConnection.GetConnection();
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    string query = @"select basic_pay from dbo.employee_payroll where name=@name";
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("@name", name);
+                    double basicPay = (double)sqlCommand.ExecuteScalar();
+                    return basicPay;
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
             }
         }
     }

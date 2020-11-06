@@ -15,8 +15,7 @@ namespace EmployeePayrollProblem
         /// <param name="args">The arguments.</param>
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            //EmployeeDBOperations.DisplayEmployeeDetails();
+            EmployeeDBOperations.DisplayEmployeeDetails();
         }
     }
 }

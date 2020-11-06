@@ -77,7 +77,10 @@ namespace EmployeePayrollProblem
                 using (sqlConnection)
                 {
                     sqlConnection.Open();
-                    string query = @"select * from dbo.employee_payroll";
+                    string query = @"SELECT e.id, e.name,  e.start, e.gender, e.address, d.dept_name, p.basic_pay, p.deductions, p.taxable_pay, p.income_tax, p.net_pay
+                                    FROM employee e, payroll p, department d, employee_department ed
+                                    WHERE e.id = p.emp_id AND e.id = ed.emp_id 
+		                                    AND ed.dept_id=d.dept_id";
                     SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                     SqlDataReader dataReader = sqlCommand.ExecuteReader();
                     if (dataReader.HasRows == false)
@@ -92,9 +95,9 @@ namespace EmployeePayrollProblem
                             string name = dataReader["name"].ToString();
                             DateTime start = Convert.ToDateTime(dataReader["start"].ToString());
                             string gender = dataReader["gender"].ToString();
-                            string phoneNumber = dataReader["phone_number"].ToString();
+                            //string phoneNumber = dataReader["phone_number"].ToString();
                             string address = dataReader["address"].ToString();
-                            string department = dataReader["department"].ToString();
+                            string department = dataReader["dept_name"].ToString();
                             double basicPay = Convert.ToDouble(dataReader["basic_pay"].ToString());
                             double deductions = Convert.ToDouble(dataReader["deductions"].ToString());
                             double taxablePay = Convert.ToDouble(dataReader["taxable_pay"].ToString());
@@ -106,7 +109,7 @@ namespace EmployeePayrollProblem
                             employee.EmployeeName = name;
                             employee.StartDate = start;
                             employee.Gender = gender;
-                            employee.PhoneNumber = phoneNumber;
+                            //employee.PhoneNumber = phoneNumber;
                             employee.Address = address;
                             employee.Department = department;
                             employee.BasicPay = basicPay;

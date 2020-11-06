@@ -119,6 +119,11 @@ namespace EmployeePayrollProblem
             }
         }
 
+        /// <summary>
+        /// This function is equivalent to prepared statement in C#
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="basicPay"></param>
         public static void UpdateSalary(string name, double basicPay)
         {
             SqlConnection sqlConnection = DBConnection.GetConnection();

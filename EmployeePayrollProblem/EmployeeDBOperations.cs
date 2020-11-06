@@ -17,6 +17,53 @@ namespace EmployeePayrollProblem
     /// </summary>
     public class EmployeeDBOperations
     {
+        public static void InsertEmployeeDetails(Employee employee)
+        {
+            SqlConnection sqlConnection = DBConnection.GetConnection();
+            int id = employee.EmployeeID;
+            string name = employee.EmployeeName;
+            DateTime start = employee.StartDate;
+            string gender = employee.Gender;
+            string phoneNumber = employee.PhoneNumber;
+            string address = employee.Address;
+            string department = employee.Department;
+            double basicPay = employee.BasicPay;
+            double deductions = employee.Deductions;
+            double taxablePay = employee.TaxablePay;
+            double incomeTax = employee.IncomeTax;
+            double netPay = employee.NetPay;
+            try
+            {
+                using (sqlConnection)
+                {
+                    sqlConnection.Open();
+                    string query = @"INSERT INTO dbo.employee_payroll(name,start,gender,phone_number,address,department,basic_pay)
+                                     VALUES
+                                    (@name,@start,@gender,@phoneNumber,@address,@department,@basicPay)";
+                    SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
+                    sqlCommand.Parameters.AddWithValue("@name", name);
+                    sqlCommand.Parameters.AddWithValue("@start", start);
+                    sqlCommand.Parameters.AddWithValue("@gender", gender);
+                    sqlCommand.Parameters.AddWithValue("@phoneNumber", phoneNumber);
+                    sqlCommand.Parameters.AddWithValue("@address", address);
+                    sqlCommand.Parameters.AddWithValue("@department", department);
+                    sqlCommand.Parameters.AddWithValue("@basicPay", basicPay);
+                    sqlCommand.ExecuteNonQuery();
+                }
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.Message);
+            }
+            finally
+            {
+                if (sqlConnection.State == ConnectionState.Open)
+                {
+                    sqlConnection.Close();
+                }
+            }
+        }
+
         /// <summary>
         /// UC2
         /// </summary>

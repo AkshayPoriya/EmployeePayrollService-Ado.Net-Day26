@@ -13,7 +13,7 @@ namespace EmployeePayrollProblem
     /// <summary>
     /// Employee Details
     /// </summary>
-    class Employee
+    public class Employee
     {
         public int EmployeeID { get; set; }
         public string EmployeeName { get; set; }

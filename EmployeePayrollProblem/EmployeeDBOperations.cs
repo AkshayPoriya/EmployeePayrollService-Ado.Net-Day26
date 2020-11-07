@@ -191,7 +191,8 @@ namespace EmployeePayrollProblem
                 using (sqlConnection)
                 {
                     sqlConnection.Open();
-                    string query = @"update dbo.employee_payroll set basic_pay=@pay where name=@name";
+                    string query = @"update dbo.payroll set basic_pay=@pay 
+                                     where emp_id = (select e.id from employee e where name=@name)";
                     SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                     sqlCommand.Parameters.AddWithValue("@pay", basicPay);
                     sqlCommand.Parameters.AddWithValue("@name", name);
@@ -224,7 +225,8 @@ namespace EmployeePayrollProblem
                 using (sqlConnection)
                 {
                     sqlConnection.Open();
-                    string query = @"select basic_pay from dbo.employee_payroll where name=@name";
+                    string query = @"select p.basic_pay from dbo.payroll p 
+                                    where p.emp_id = (select e.id from employee e where name=@name)";
                     SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                     sqlCommand.Parameters.AddWithValue("@name", name);
                     double basicPay = (double)sqlCommand.ExecuteScalar();
@@ -328,7 +330,7 @@ namespace EmployeePayrollProblem
                 using (sqlConnection)
                 {
                     sqlConnection.Open();
-                    string query = @"SELECT gender,SUM(basic_pay) AS 'salary_sum',AVG(basic_pay) AS 'salary_avg',MIN(basic_pay) AS 'salary_min',MAX(basic_pay) AS 'salary_max',COUNT(basic_pay) AS 'person_count' FROM employee_payroll GROUP BY gender;";
+                    string query = @"SELECT e.gender,SUM(p.basic_pay) AS 'salary_sum',AVG(p.basic_pay) AS 'salary_avg',MIN(p.basic_pay) AS 'salary_min',MAX(p.basic_pay) AS 'salary_max',COUNT(p.basic_pay) AS 'person_count' FROM employee e,payroll p WHERE e.id=p p.emp_idGROUP BY e.gender;";
                     SqlCommand sqlCommand = new SqlCommand(query, sqlConnection);
                     SqlDataReader dataReader = sqlCommand.ExecuteReader();
                     if (dataReader.HasRows == false)

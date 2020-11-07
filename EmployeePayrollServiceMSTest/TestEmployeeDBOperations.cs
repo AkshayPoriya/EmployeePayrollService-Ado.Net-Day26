@@ -28,6 +28,7 @@ namespace EmployeePayrollServiceMSTest
             Assert.AreEqual(expected, actual);
         }
 
+        /*
         [TestMethod]
         public void TestInsertEmployee()
         {
@@ -52,5 +53,6 @@ namespace EmployeePayrollServiceMSTest
             // Assert
             Assert.AreEqual(expected, actual);
         }
+        */
     }
 }

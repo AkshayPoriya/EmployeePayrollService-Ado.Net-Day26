@@ -16,7 +16,7 @@ namespace EmployeePayrollProblem
         static void Main(string[] args)
         {
             EmployeeDBOperations.DisplayEmployeeDetails(EmployeeDBOperations.GetAllEmployeeDetails());
-            //EmployeeDBOperations.GetSalaryStatsGenderWise();
+            EmployeeDBOperations.GetSalaryStatsGenderWise();
         }
     }
 }
